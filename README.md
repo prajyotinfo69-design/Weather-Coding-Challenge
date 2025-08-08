@@ -96,6 +96,7 @@ pytest
 
 All tests use SQLite in‑memory.
 
+![test-coverage.png](images/test-coverage.png)
 ---
 
 ## Environment variables
