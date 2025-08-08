@@ -80,7 +80,8 @@ python scripts/manage.py stats
 # Run API with reload
 uvicorn src.main:app --reload
 ```
-# Note: In case its throwing import errors, run the following command on same shell on which to execute below commands
+### Note: 
+In case its throwing import errors, run the following command on same shell on which to execute below commands
 ```bash
   export PYTHONPATH=.
 ```

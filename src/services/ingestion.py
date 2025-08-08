@@ -1,9 +1,14 @@
 import os
 from datetime import datetime
+import logging
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from src.db.session import SessionLocal
 from src.models.weather import Weather
 from src.models.yield_data import YieldData
+
+
+logger = logging.getLogger(__name__)
+# logger.setLevel(logging.INFO)
 
 def _parse_int_or_none(raw: str) -> float | None:
     v = int(raw)
@@ -20,6 +25,8 @@ def _flush(buf, db):
 def ingest_weather_dir(path: str, batch_size: int = 10_000):
     db = SessionLocal()
     buf = []
+    t0 = datetime.now()
+    logger.info("Ingestion started: %s", path)
     for fname in os.listdir(path):
         if not fname.endswith(".txt"):
             continue
@@ -38,9 +45,10 @@ def ingest_weather_dir(path: str, batch_size: int = 10_000):
                 )
                 if len(buf) >= batch_size:
                     _flush(buf, db)
-        print(f"loaded {fname}")
+        logger.info(f"loaded {fname}")
     _flush(buf, db)
     db.close()
+    logger.info(f"Ingestion Finished {(datetime.now() - t0).total_seconds()}")
 
 def ingest_yield_file(file_path: str):
     db = SessionLocal()
